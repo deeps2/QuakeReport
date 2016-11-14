@@ -28,7 +28,4 @@
         android:layout_weight="1"
         tools:text = "Mar 6, 2010"/>
 
-
-
-
 </LinearLayout>
