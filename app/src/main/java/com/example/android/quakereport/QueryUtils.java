@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 /**
  * Helper methods related to requesting and receiving earthquake data from USGS.
  */
@@ -102,7 +103,7 @@ public final class QueryUtils {
 
                 String url = properties.getString("url");
 
-                Earthquake earthquake = new Earthquake(magnitude,offset,priLoc,dateToDisplay,timeToDisplay,url);
+                Earthquake earthquake = new Earthquake(magnitude,offset,priLoc,dateToDisplay,timeToDisplay);//,url);
                 earthquakes.add(earthquake);
             }
 
