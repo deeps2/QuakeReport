@@ -2,15 +2,15 @@ package com.example.android.quakereport;
 
 public class Earthquake {
 
-    private String mMagnitude, mDate, mTime, mOffset, mPriLoc;//, mUrl;
+    private String mMagnitude, mDate, mTime, mOffset, mPriLoc, mUrl;
 
-    public Earthquake(String magnitude, String Offset, String PriLoc, String date, String time){//}, String url){
+    public Earthquake(String magnitude, String Offset, String PriLoc, String date, String time, String url){
         mMagnitude = magnitude;
         mDate      = date;
         mTime      = time;
         mOffset    = Offset;
         mPriLoc    = PriLoc;
-       // mUrl       = url;
+        mUrl       = url;
     }
 
     public String getMagnitude(){
@@ -29,5 +29,5 @@ public class Earthquake {
 
     public String getPriLoc() { return  mPriLoc;}
 
-   // public String getUrl() { return mUrl; }
+    public String getUrl() { return mUrl; }
 }

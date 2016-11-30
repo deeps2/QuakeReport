@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.List;
 import static com.example.android.quakereport.R.id.magnitude;
 
-
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
     public EarthquakeAdapter(Context context, List<Earthquake> earthquakes){
@@ -93,8 +92,6 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
         // Set the color on the magnitude circle
         magnitudeCircle.setColor(magnitudeColor);
-
-
 
         TextView offsetView = (TextView)listItemView.findViewById(R.id.offset);
         offsetView.setText(currentEarthquake.getOffset());
