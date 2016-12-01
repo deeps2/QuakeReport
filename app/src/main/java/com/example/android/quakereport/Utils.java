@@ -117,8 +117,13 @@ public class Utils {
     //Buffering means that data is aggregated in an array called a "buffer". BufferedReader "buffers" characters so as to provide efficient reading of characters and lines.
 
     private static List<Earthquake> extractFeatureFromJson(String earthquakeJSON) {
+        /*try{
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
 
-         List earthquakesList = new ArrayList<>();
+        List earthquakesList = new ArrayList<>();
 
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(earthquakeJSON)) {

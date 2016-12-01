@@ -4,7 +4,7 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import java.util.List;
 
-// Loads a list of earthquakes by using an AsyncTask to perform the network request to the given URL.
+// Loads a list of earthquakes by using an AsyncTaskLoader to perform the network request to the given URL.
 
 public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
 
