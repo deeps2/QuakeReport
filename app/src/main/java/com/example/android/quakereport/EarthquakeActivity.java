@@ -1,8 +1,9 @@
 package com.example.android.quakereport;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,30 +12,73 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarthquakeActivity extends AppCompatActivity {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
     private static final String SAMPLE_JSON_RESPONSE_3 = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
-    //private static final String SAMPLE_JSON_RESPONSE_4 = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=10";
     private EarthquakeAdapter adapter;
+
+    //Constant value for the earthquake loader ID. We can choose any integer.
+    // This really only comes into play if you're using multiple loaders.
+    private static final int EARTHQUAKE_LOADER_ID = 1;
+
+
+    // we need to override the three methods specified in the LoaderCallbacks interface. We need onCreateLoader(), for when the LoaderManager has
+    // determined that the loader with our specified ID isn't running, so we should create a new one.
+    @Override
+    public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
+        // Create a new loader for the given URL
+        return new EarthquakeLoader(this, SAMPLE_JSON_RESPONSE_3);
+    }
+
+
+    //We need onLoadFinished(), where we'll do exactly what we did in onPostExecute(), and use the
+    // earthquake data to update our UI - by updating the dataset in the adapter.
+    @Override
+    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+        // Clear the adapter of previous earthquake data
+        adapter.clear();
+
+        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's data set. This will trigger the ListView to update.
+        if (earthquakes != null && !earthquakes.isEmpty()) {
+            adapter.addAll(earthquakes);
+        }
+    }
+
+
+    // we need onLoaderReset(), we're we're being informed that the data from our loader is no longer valid.
+    // This isn't actually a case that's going to come up with our simple loader, but the correct thing to do
+    // is to remove all the earthquake data from our UI by clearing out the adapter’s data set.
+    @Override
+    public void onLoaderReset(Loader<List<Earthquake>> loader) {
+        // Loader reset, so we can clear out our existing data.
+        adapter.clear();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
-
-        // Create a fake list of earthquake locations.
-        //   ArrayList<Earthquake> earthquakes = new ArrayList<>();
         /*
-        earthquakes.add(new Earthquake("7.2", "San Francisco", "Feb 2 2016"));
-        earthquakes.add(new Earthquake("7.2", "London", "Feb 2 2016"));
-        earthquakes.add(new Earthquake("7.2", "Tokyo", "Feb 2 2016"));
-        earthquakes.add(new Earthquake("7.2", "Mexico City", "Feb 2 2016"));
-        earthquakes.add(new Earthquake("7.2", "Moscow", "Feb 2 2016"));
-        earthquakes.add(new Earthquake("7.2", "Rio de Janeiro", "Feb 2 2016"));
-        earthquakes.add(new Earthquake("7.2", "Paris", "Feb 2 2016")); */
+        to retrieve an earthquake, we need to get the loader manager and tell the loader manager to
+        initialize the loader with the specified ID, the second argument allows us to pass a bundle
+        of additional information, which we'll skip. The third argument is what object should receive
+        the LoaderCallbacks (and therefore, the data when the load is complete!) - which will be this
+        activity. This code goes inside the onCreate() method of the EarthquakeActivity, so that the
+        loader can be initialized as soon as the app opens.
+        */
+
+        // Get a reference to the LoaderManager, in order to interact with loaders.
+        LoaderManager loaderManager = getLoaderManager();
+
+        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+        // because this activity implements the LoaderCallbacks interface).
+        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+
+
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
@@ -47,9 +91,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
 
-        EarthquakeAsyncTask task = new EarthquakeAsyncTask();
-        task.execute(SAMPLE_JSON_RESPONSE_3);
-        //task.execute(SAMPLE_JSON_RESPONSE_4);
+
 
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,27 +109,5 @@ public class EarthquakeActivity extends AppCompatActivity {
                 startActivity(websiteIntent);
             }
         });
-    }
-
-
-    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
-
-        protected List<Earthquake> doInBackground(String... urls) {
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
-            List<Earthquake> result = Utils.fetchEarthquakeData(urls[0]);
-            return result;
-        }
-        
-        protected void onPostExecute(List<Earthquake> result) {
-            if (result == null) {
-                return;
-            }
-            // Clear the adapter of previous earthquake data
-            adapter.clear();
-            adapter.addAll(result);  //IMP. instead of calling updateUI method(which is generally inside AsyncTask and it refers to the views ID and
-            // then setText; we use adapter.add(result) after adapter.clear()...this will clear the empty adapter and update it with the new ones.
-        }
     }
 }
