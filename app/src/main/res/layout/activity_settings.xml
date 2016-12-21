@@ -6,4 +6,4 @@
 
 </fragment>
 
-<!-- what is this for...try to comment whole this-->
+<!-- android:name is important, otherwise app will crash-->
