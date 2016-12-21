@@ -4,11 +4,15 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,9 +20,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
-    private static final String SAMPLE_JSON_RESPONSE_3 = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
+    private static final String SAMPLE_JSON_RESPONSE_3 = "http://earthquake.usgs.gov/fdsnws/event/1/query";//?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     private EarthquakeAdapter adapter;
 
@@ -34,7 +39,27 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
-        return new EarthquakeLoader(this, SAMPLE_JSON_RESPONSE_3);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String minMagnitude = sharedPrefs.getString(
+                getString(R.string.settings_min_magnitude_key),
+                getString(R.string.settings_min_magnitude_default));
+
+        Uri baseUri = Uri.parse(SAMPLE_JSON_RESPONSE_3);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("format", "geojson");
+        uriBuilder.appendQueryParameter("limit", "10");
+        uriBuilder.appendQueryParameter("minmag", minMagnitude);
+        uriBuilder.appendQueryParameter("orderby", "time");
+
+        return new EarthquakeLoader(this, uriBuilder.toString());
+
+
+
+
+       // return new EarthquakeLoader(this, SAMPLE_JSON_RESPONSE_3);
     }
 
 
@@ -119,8 +144,20 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new adapter that takes an EMPTY LIST of earthquakes as input -> M.IMP
-        //new ArrayList<Earthquake> because earlier we used to get the list by doing --> ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes(); (see above). now this line is used inside doInBackground of AsyncTask
-        adapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
+        //"new" ArrayList<Earthquake> because earlier we used to get the list by
+            // doing --> ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+            // now this line is used inside doInBackground of AsyncTask.
+            // Inside QueryUtils.extractEarthquakes() you can see at the top: ArrayList<Earthquake> earthquakes = new ArrayList<>();
+            // So from there this 'new'ly created ArrayList was being returned
+
+        //even before that we used: EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
+            // where ArrayList<String> earthquakes = "new" ArrayList<>(); and earthquakes.add();{... like that many hardcoded data}
+        adapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>()); //1st constructor
+
+        //2nd method//adapter = new EarthquakeAdapter(this); //2nd constructor
+        //3rd method//adapter = new EarthquakeAdapter(this,-1);//or 0,1 even 100 also. Why???. 3rd constructor
+
+
 
         // Set the adapter on the {@link ListView so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
@@ -144,5 +181,22 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
                 startActivity(websiteIntent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, Settings.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

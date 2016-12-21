@@ -14,8 +14,17 @@ import static com.example.android.quakereport.R.id.magnitude;
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
     public EarthquakeAdapter(Context context, List<Earthquake> earthquakes){
-        super(context, 0, earthquakes);
+       super(context, 0, earthquakes);
     }
+
+    /* public EarthquakeAdapter(Context context){          //2nd constructor
+        super(context, 0, new ArrayList<Earthquake>());    //only 1 can be used at a time
+        super(context, -1, new ArrayList<Earthquake>());
+    } */
+
+    /*public EarthquakeAdapter(Context context, int resource){   //3rd constructor
+        super(context, resource);
+    }*/
 
     private int getMagnitudeColor(String magnitude) {
         int magnitudeColorResourceId;
