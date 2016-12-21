@@ -1,6 +1,7 @@
 package com.example.android.quakereport;
 
 import android.content.SharedPreferences;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -27,13 +28,26 @@ public class Settings extends AppCompatActivity {
             */
             Preference minMagnitude = findPreference(getString(R.string.settings_min_magnitude_key));
             bindPreferenceSummaryToValue(minMagnitude);
+
+            Preference orderBy = findPreference(getString(R.string.settings_order_by_key));
+            bindPreferenceSummaryToValue(orderBy);
         }
 
         //The code in this method takes care of updating the displayed preference summary after it has been changed.
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
-            preference.setSummary(stringValue);
+
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(stringValue);
+                if (prefIndex >= 0) {
+                    CharSequence[] labels = listPreference.getEntries();
+                    preference.setSummary(labels[prefIndex]);
+                }
+            } else {
+                preference.setSummary(stringValue);
+            }
             return true;
         }
 
