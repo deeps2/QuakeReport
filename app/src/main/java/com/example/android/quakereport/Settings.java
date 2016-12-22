@@ -36,7 +36,7 @@ public class Settings extends AppCompatActivity {
         //The code in this method takes care of updating the displayed preference summary after it has been changed.
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
+            String stringValue = value.toString(); //<string name="settings_order_by_magnitude_value"> OR <string name="settings_order_by_most_recent_value">
 
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;

@@ -4,17 +4,19 @@
     android:title="@string/settings_title">
 
     <ListPreference
+        android:title="@string/settings_order_by_label"
         android:defaultValue="@string/settings_order_by_default"
-        android:entries="@array/settings_order_by_labels"
-        android:entryValues="@array/settings_order_by_values"
         android:key="@string/settings_order_by_key"
-        android:title="@string/settings_order_by_label" />
+
+            android:entries="@array/settings_order_by_labels"
+            android:entryValues="@array/settings_order_by_values"/>
+            <!-- as it is an array i have to tell it where to look for entries and values -->
 
     <EditTextPreference
+        android:title="@string/settings_min_magnitude_label"
         android:defaultValue="@string/settings_min_magnitude_default"
-        android:inputType="numberDecimal"
         android:key="@string/settings_min_magnitude_key"
-        android:selectAllOnFocus="true"
-        android:title="@string/settings_min_magnitude_label" />
 
+        android:inputType="numberDecimal"
+        android:selectAllOnFocus="true"/>
 </PreferenceScreen>
