@@ -8,8 +8,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-                                   //this file is not used with utils.java//
-
+                                   //NOTE: this file will not be used if utils.java is present in a commit. this file was used in earlier stage of development when I was first
+                                  //       learning how to parse RAW JSON response.
 /**
  * Helper methods related to requesting and receiving earthquake data from USGS.
  */

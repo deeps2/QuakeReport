@@ -20,9 +20,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
-
+                                                                                                                     //old query in comment when preferences were not used
     private static final String SAMPLE_JSON_RESPONSE_3 = "http://earthquake.usgs.gov/fdsnws/event/1/query";//?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     private EarthquakeAdapter adapter;
@@ -51,7 +50,6 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
                 getString(R.string.settings_order_by_default)
         );
 
-
         Uri baseUri = Uri.parse(SAMPLE_JSON_RESPONSE_3);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
@@ -61,10 +59,6 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         uriBuilder.appendQueryParameter("orderby", orderBy);
 
         return new EarthquakeLoader(this, uriBuilder.toString());
-
-
-
-
        // return new EarthquakeLoader(this, SAMPLE_JSON_RESPONSE_3);
     }
 

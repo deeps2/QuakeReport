@@ -12,7 +12,7 @@ public class Earthquake {
         mPriLoc    = PriLoc;
         mUrl       = url;
     }
-
+    
     public String getMagnitude(){
         return mMagnitude;
     }

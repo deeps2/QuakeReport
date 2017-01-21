@@ -8,3 +8,6 @@
         android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 </menu>
+
+<!-- if I remove android:icon and in showAsAction & I write never then 3dots will come
+and when you click on it then a small card will come with Settings written on it -->
