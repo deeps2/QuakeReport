@@ -20,7 +20,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
+public class EarthquakeActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
+       // ,SharedPreferences.OnSharedPreferenceChangeListener{
                                                                                                                      //old query in comment when preferences were not used
     private static final String SAMPLE_JSON_RESPONSE_3 = "http://earthquake.usgs.gov/fdsnws/event/1/query";//?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
@@ -206,7 +208,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     }
 
 
-    @Override
+   @Override
     protected void onStart() {
         super.onStart();
         if(flag) {
@@ -214,4 +216,25 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
             getLoaderManager().restartLoader(EARTHQUAKE_LOADER_ID , null, this);
         }
     }
+
+    //instead of restarting the loader in onStart(), you can
+    // restart it in onSharedPreferenceChanged callback() also..include implements SharedPreferences.OnSharedPreferenceChangeListener
+   /* @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_min_magnitude_key)) ||
+                key.equals(getString(R.string.settings_order_by_key))){
+            // Clear the ListView as a new query will be kicked off
+            adapter.clear();
+
+            // Hide the empty state text view as the loading indicator will be displayed
+            mEmptyStateTextView.setVisibility(View.GONE);
+
+            // Show the loading indicator while new data is being fetched
+            View loadingIndicator = findViewById(R.id.loading_indicator);
+            loadingIndicator.setVisibility(View.VISIBLE);
+
+            // Restart the loader to requery the USGS as the query settings have been updated
+            getLoaderManager().restartLoader(EARTHQUAKE_LOADER_ID, null, this);
+        }
+    } */
 }
