@@ -17,6 +17,9 @@ public class Settings extends AppCompatActivity {
     }
 
     public static class EarthquakePreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+        public static Preference mPreference;
+        public static String mPreferenceString;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -33,10 +36,12 @@ public class Settings extends AppCompatActivity {
             bindPreferenceSummaryToValue(orderBy);
         }
 
-        //The code in this method takes care of updating the displayed preference summary after it has been changed.
+        //The code in this method takes care of updating the preferences
+        //and updating the displayed preference summary after any of the 2 settings is updated
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString(); //<string name="settings_order_by_magnitude_value"> OR <string name="settings_order_by_most_recent_value">
+            String stringValue = value.toString();
+            //<string name="settings_order_by_magnitude_value"> OR <string name="settings_order_by_most_recent_value">
 
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
@@ -58,13 +63,30 @@ public class Settings extends AppCompatActivity {
         */
         private void bindPreferenceSummaryToValue(Preference preference) {
 
-            preference.setOnPreferenceChangeListener(this);
+            mPreference = preference;
+            mPreference.setOnPreferenceChangeListener(this);//whenever a new value is set in settings screen, onPreferenceChange will be called
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-            String preferenceString = preferences.getString(preference.getKey(), "");
-            onPreferenceChange(preference, preferenceString);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mPreference.getContext());
+            String preferenceString = preferences.getString(mPreference.getKey(), "");
+
+            mPreferenceString = preferenceString;
+            onPreferenceChange(mPreference, mPreferenceString);
         }
-
     }
-
 }
+
+/*
+           INFORMATION ABOUT STATIC CLASSES
+Java has static nested classes but it sounds like you're looking for a top-level static class. Java has no way of making
+ a top-level class static
+
+Declare your class final - Prevents extension of the class since extending a static class makes no sense
+
+Make the constructor private - Prevents instantiation by client code as it makes no sense to instantiate a static class
+
+Make all the members and functions of the class static - Since the class cannot be instantiated no
+instance methods can be called or instance fields accessed
+
+Note that the compiler will not prevent you from declaring an instance (non-static) member.
+The issue will only show up if you attempt to call the instance member
+ */

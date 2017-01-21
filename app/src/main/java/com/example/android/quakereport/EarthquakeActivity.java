@@ -32,6 +32,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     // This really only comes into play if you're using multiple loaders.
     private static final int EARTHQUAKE_LOADER_ID = 1;
 
+    boolean flag = false;
+
 
     // we need to override the three methods specified in the LoaderCallbacks interface. We need onCreateLoader(), for when the LoaderManager has
     // determined that the loader with our specified ID isn't running, so we should create a new one.
@@ -83,6 +85,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         // Set empty state text to display "No earthquakes found."
         //It’s okay if this text is set every time the loader finishes because it’s not too expensive of an operation.
+        // List view will take care of showing the view corresponding to mEmptyStateTextView when the adapter has 0 contents as I have
+          //already setted it with  -- earthquakeListView.setEmptyView(mEmptyStateTextView); so it will only be visible when adapter has 0 contents.
         mEmptyStateTextView.setText(R.string.no_earthquakes);
     }
 
@@ -103,7 +107,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         setContentView(R.layout.earthquake_activity);
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
-
+        flag = true;
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -162,6 +166,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // Set the adapter on the {@link ListView so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
         earthquakeListView.setEmptyView(mEmptyStateTextView);
+        // List view will take care of showing the view corresponding to mEmptyStateTextView when the adapter has 0 contents.
 
 
 
@@ -198,5 +203,15 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(flag) {
+           // LoaderManager loaderManager = getLoaderManager();
+            getLoaderManager().restartLoader(EARTHQUAKE_LOADER_ID , null, this);
+        }
     }
 }
