@@ -3,14 +3,14 @@
 <b> NOTE: loader branch uses Loader. To see the AsyncTask implementation, switch to master1 branch. This readme is for loader branch </b>
 </br></br>App to fetch earthquake details using USGS API <b>(loader branch)</b>
 
-The app uses Loader to communicate as you can't do Network calls on Main thread. Loader is better option that AsyncTask as it retains the data while configuration changes and listen to data source as well for any change. I have not used any networking library such as Retrofit or Volley(for implementation of Retrofit,see my InstaNyooz app https://github.com/deeps2/InstaNyooz). Inside Utils.java you can see methods for creating URL, making HTTP request, reading data from Input Stream and parsing JSON response to get the desired information. 
+The app uses Loader to communicate as you can't do Network calls on Main thread. Loader is better option than AsyncTask as it retains the data while configuration changes and listen to data source as well for any change. I have not used any networking library such as Retrofit or Volley (for implementation of Retrofit,see my InstaNyooz app https://github.com/deeps2/InstaNyooz). Inside Utils.java you can see methods for creating URL, making HTTP request, reading data from Input Stream and parsing JSON response to get the desired information. 
 
 The app uses different colors for displaying the magnitude of earthquake(red color is for higher magnitude). Click on any list items to go
 to USGS site and get detail information about that particular earthquake.
 
 What's new in loader branch
 ---------------------------
-(1) Unlike the master branch which uses AsyncTask and you can get only the earthquake between the magnitude 6-10, this branch has a Settings option where you can select the magnitude of earthquake and can sort it by time or strength of its magnitude.
+(1) Unlike the master branch in which you can get only the earthquake between the magnitude 6-10, this branch has a Settings option where you can select the magnitude of earthquake and can sort it by time or strength of its magnitude.
 
 (2) This branch uses Shared Preference for saving your settings so that when next time you launch the app, you will see the list of earthquakes corresponding to your last saved settings.
 
